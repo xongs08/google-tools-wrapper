@@ -6,7 +6,7 @@ This library provides a simple interface for accessing Google features.
 
 ### Installation
 
-[See it on Pypi](https://pypi.org/project/google-tools-wrapper/)
+[See it on Pypi](https://pypi.org/project/google-tools-wrapper/)\
 [See it on Github](https://github.com/xongs08/google-tools-wrapper)
 
 ```bash
