@@ -8,50 +8,49 @@ from bs4 import BeautifulSoup as bs
 import requests
 
 def wrapper(url: str, selenium_method: bool = False, selenium_class_identifier: tuple = None) -> bs:
-    if selenium_method is not False: # check the type of wrapper
-        try: # get code at an """alternative method"""
-            # dont open edge at user computer
-            options = webdriver.ChromeOptions()
-            options.add_argument("--headless=new")
+    if selenium_method is True:
+        try:
+            Options = webdriver.ChromeOptions() # custom options
+            Options.add_argument("--headless=new") # more efficiency & dont open chrome on user computer
 
-            # selenium driver
-            driver = webdriver.Chrome(options=options) # chrome bc firefox is TOO slow and edge is too buged
+            driver = webdriver.Chrome(options=Options) # generates an chrome page "emulator"
 
-            # delete devtools message &others popups
+            # delete devtools message (selenium popup)
             sys.stdout.write("\033[F")
             sys.stdout.write("\033[K")
-            
+            sys.stdout.write("\033[F")
 
-            driver.get(url) # get page
+            driver.get(url) # """requests""" the page (emulate the page on the driver)
 
-            # wait load the page and the element be viewed
+            # wait til load the traduction element (html) 
             WebDriverWait(driver, 15).until(EC.presence_of_element_located((selenium_class_identifier[0], selenium_class_identifier[1])))
-            # selenium_class_identifier value 1example: =(By.CLASS_NAME, '<element class>')
-            # selenium_class_identifier value 2example: =(By.ID, '<element id>')
+            # selenium_class_identifier value 1st example: (By.CLASS_NAME, '<element class>')
+            # selenium_class_identifier value 2nd example: (By.ID, '<element id>')
 
-            page_code = driver.page_source # get page source code
+            page_code = driver.page_source # get page code
 
-            driver.quit() # close driver
-
-            soup = bs(page_code, 'html.parser') # get soup
-        except TimeoutException as err: #exception
-            return f"Selenium couldn't find the element... Error: {str(err)}"
-    else: # default wrapper (only requests.get and bs html.parser)
+            soup = bs(page_code, 'html.parser')
+        except TimeoutException as tout:
+            return f"Something went wrong! Error: {str(tout)}" 
+    else: # default wrapper
         try:
-            resp = requests.get(url) # request page
-            soup = bs(resp.content, 'html.parser') # get code
-        except Exception as err: # exception
+            resp = requests.get(url) # request the page
+            resp.raise_for_status() # if status_code isnt 200 will return an especific exception
+            soup = bs(resp.content, 'html.parser') # page code (response as bytes)
+        except Exception as err:
             return f"Something went wrong! Error: {str(err)}"
-    return soup # always return the soup
+
+    return soup # always returns soup
 
 class GoogleTools:
     ## FINE
-    def currency_conversion(base_currency: str, target_currency: str, only_float=True) -> tuple | dict:
+    def currency_conversion(base_currency: str, target_currency: str, only_float: bool = True) -> tuple | dict:
         url_ = f"https://www.google.com/finance/quote/{base_currency.upper()}-{target_currency.upper()}" # base url
             
         soup = wrapper(url=url_) # get soup (default method)
         
         currency_value = float(f"{float(soup.find('div', attrs={'class': 'YMlKec fxKbKc'}).text):.4f}") # find the value of the currency and turn into a float with up to 4 decimals
+
         last_update = soup.find('div', attrs={'class': 'ygUjEc', 'jsname': 'Vebqub'}).text.replace('\u202f', ' ').replace(' · Disclaimer', '') # finding the last update of the currency and filter it to remove bullshit
 
         conversion_dict = { # formatting the wrapped data to return it prettyfied
@@ -77,29 +76,4 @@ class GoogleTools:
 
         translated_text = soup.find('span', attrs={'class': 'ryNqvb', 'jsname': 'W297wb'}).text # finding the translation
 
-        return translated_text # fuck yeah returning it
-
-    ## TODO (mo preguica kkkkk)
-    def bard_api(question: str, chat: str):
-        print('bard api is under development')
-
-import time
-
-class GoogleToolsTests:
-    def test_currency_conversion():
-        t1 = time.time()
-        print(f"TESTING CURRENCY CONVERSION:\n`only_float=True`:\n{GoogleTools.currency_conversion('USD', 'BRL')}\n\n`only_float=False`:\n{GoogleTools.currency_conversion('USD', 'BRL', False)}\n")
-        t2 = time.time() - t1
-        print(f"Demoraram {t2} segundos")
-
-    def test_translater(text_: str):
-        t1 = time.time()
-        print(f"TESTING TRANSLATER:\n{GoogleTools.translater('pt', 'en', text_)}")
-        t2 = time.time() - t1
-        print(f"Demoraram {t2} segundos")
-
-if __name__ == '__main__':
-    test = GoogleToolsTests
-    
-    test.test_currency_conversion()
-    test.test_translater('Me chamo João Zacchello, sou programador, só isso.')
+        return translated_text
