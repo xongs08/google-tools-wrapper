@@ -23,7 +23,7 @@ class Benchmarking:
         print(f"{finish_timer / n} seconds per operation.")
 
 if __name__ == '__main__':
-    Benchmarking.currency_conversion(30) # 1.114 sec p/operation
-    Benchmarking.currency_conversion(30, False) # 1.191 sec p/operation
+    #Benchmarking.currency_conversion(30) # 1.061 sec p/operation
+    #Benchmarking.currency_conversion(30, False) # 1.172 sec p/operation
 
-    Benchmarking.translater(10, 'pt', 'en', 'Ola, me chamo Joao Zacchello!') # 6.123 sec p/operation
+    Benchmarking.translater(5, 'pt', 'en', 'Ola, me chamo Joao Zacchello!') # 6.293 sec p/operation

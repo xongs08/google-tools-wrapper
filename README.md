@@ -46,11 +46,11 @@ def currency_conversion_test(n: int, only_float_: bool = True):
 
 # 1st benchmarking:
 >>> currency_conversion_test(30)
-1.114 seconds per operation.
+1.061 seconds per operation.
 
 # 2nd benchmarking:
 >>> currency_conversion_test(30, False)
-1.191 seconds per operation.
+1.172 seconds per operation.
 ```
 
 ## Translater Usage
@@ -72,7 +72,7 @@ def translater_test(n: int, source_language_: str, target_language_: str, text_:
     print(avg_time:.3f)
 
 >>> translater_test(10, 'pt', 'en', 'Ola, me chamo Joao Zacchello!')
-6.123
+6.293
 ```
 
 ### Disclaimer
