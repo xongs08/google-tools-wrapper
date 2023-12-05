@@ -7,40 +7,40 @@ from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup as bs
 import requests
 
-def wrapper(url: str, selenium_method: bool = False, selenium_class_identifier: tuple = None) -> bs:
-    if selenium_method is True:
-        try:
-            Options = webdriver.ChromeOptions() # custom options
-            Options.add_argument("--headless=new") # more efficiency & dont open chrome on user computer
+def wrapper(url: str) -> bs: 
+    try:
+        resp = requests.get(url) # request the page
+        resp.raise_for_status() # if status_code isnt 200 will return an especific exception
+        soup = bs(resp.content, 'html.parser') # page code (response as bytes)
+        return soup
+    except Exception as err:
+        return f"Something went wrong! Error: {str(err)}"
 
-            driver = webdriver.Chrome(options=Options) # generates an chrome page "emulator"
+def selenium_wrapper(url:str, selenium_identifier: tuple) -> bs:
+    try:
+        Options = webdriver.ChromeOptions() # custom options
+        Options.add_argument("--headless=new") # more efficiency & dont open chrome on user computer
 
-            # delete devtools message (selenium popup)
-            sys.stdout.write("\033[F")
-            sys.stdout.write("\033[K")
-            sys.stdout.write("\033[F")
+        driver = webdriver.Chrome(options=Options) # generates an chrome page "emulator"
 
-            driver.get(url) # """requests""" the page (emulate the page on the driver)
+        # delete devtools message (selenium popup)
+        sys.stdout.write("\033[F")
+        sys.stdout.write("\033[K")
+        sys.stdout.write("\033[F")
 
-            # wait til load the traduction element (html) 
-            WebDriverWait(driver, 15).until(EC.presence_of_element_located((selenium_class_identifier[0], selenium_class_identifier[1])))
-            # selenium_class_identifier value 1st example: (By.CLASS_NAME, '<element class>')
-            # selenium_class_identifier value 2nd example: (By.ID, '<element id>')
+        driver.get(url) # """requests""" the page (emulate the page on the driver)
 
-            page_code = driver.page_source # get page code
+        # wait til load the traduction element (html) 
+        WebDriverWait(driver, 15).until(EC.presence_of_element_located((selenium_identifier[0], selenium_identifier[1])))
+        # selenium_identifier value 1st example: (By.CLASS_NAME, '<element class>')
+        # selenium_identifier value 2nd example: (By.ID, '<element id>')
 
-            soup = bs(page_code, 'html.parser')
-        except TimeoutException as tout:
-            return f"Something went wrong! Error: {str(tout)}" 
-    else: # default wrapper
-        try:
-            resp = requests.get(url) # request the page
-            resp.raise_for_status() # if status_code isnt 200 will return an especific exception
-            soup = bs(resp.content, 'html.parser') # page code (response as bytes)
-        except Exception as err:
-            return f"Something went wrong! Error: {str(err)}"
+        page_code = driver.page_source # get page code
 
-    return soup # always returns soup
+        soup = bs(page_code, 'html.parser')
+        return soup
+    except TimeoutException as tout:
+        return f"Something went wrong! Error: {str(tout)}"
 
 class GoogleTools:
     ## FINE
@@ -49,7 +49,7 @@ class GoogleTools:
             
         soup = wrapper(url=url_) # get soup (default method)
         
-        currency_value = float(f"{float(soup.find('div', attrs={'class': 'YMlKec fxKbKc'}).text):.4f}") # find the value of the currency and turn into a float with up to 4 decimals
+        currency_value = float(soup.find('div', attrs={'class': 'YMlKec fxKbKc'}).text) # find the value of the currency and turn into a float
 
         last_update = soup.find('div', attrs={'class': 'ygUjEc', 'jsname': 'Vebqub'}).text.replace('\u202f', ' ').replace(' · Disclaimer', '') # finding the last update of the currency and filter it to remove bullshit
 
@@ -72,8 +72,11 @@ class GoogleTools:
         
         url_ = f'https://translate.google.com/?sl={source_language}&tl={target_language}&text={text}&op=translate' # base url
 
-        soup = wrapper(url=url_, selenium_method=True, selenium_class_identifier=(By.CLASS_NAME, 'ryNqvb')) # get soup (selenium method)
+        soup = selenium_wrapper(url_, (By.CLASS_NAME, 'ryNqvb')) # get soup (selenium method)
 
         translated_text = soup.find('span', attrs={'class': 'ryNqvb', 'jsname': 'W297wb'}).text # finding the translation
 
         return translated_text
+    
+    def blackbox_ai(question: str):
+        pass
