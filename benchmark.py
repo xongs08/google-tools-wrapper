@@ -1,28 +1,47 @@
+from time import perf_counter
 import google_tools as gt
-import time
 
-def currency_conversion(n: int, only_float_: bool = True):
-    start_timer = time.time()
+def test_currency_conversion(n):
+    start = perf_counter()
+    operations_time = []
+    for _ in range(n):
+        start_ = perf_counter()
+        gt.currency_conversion('USD', 'BRL')
+        operations_time.append(perf_counter() - start_)
+    full_time = perf_counter() - start
+    final_result = {
+        'min_time': min(operations_time),
+        'max_time': max(operations_time),
+        'avg': {
+            'operations': n,
+            'time_per_operation': full_time / n
+        }
+    }
+    return final_result
 
-    for i in range(n):
-        gt.currency_conversion('USD', 'BRL', only_float_)
-
-    avg_time = (time.time() - start_timer) / n
-        
-    print(f"{avg_time:.3f} seconds per operation.")
-
-def translater(n: int, source_language_: str, target_language_: str, text_: str):
-    start_timer = time.time()
-
-    for i in range(n):
-        gt.translater(source_language_, target_language_, text_)
-
-    avg_time = (time.time() - start_timer) / n
-        
-    print(f"{avg_time:.3f} seconds per operation.")
+def test_translater(n):
+    start = perf_counter()
+    operations_time = []
+    for _ in range(n):
+        start_ = perf_counter()
+        gt.translater('pt', 'en', 'Ola Mundo')
+        operations_time.append(perf_counter() - start_)
+    full_time = perf_counter() - start
+    final_result = {
+        'min_time': min(operations_time),
+        'max_time': max(operations_time),
+        'avg': {
+            'operations': n,
+            'time_per_operation': full_time / n
+        }
+    }
+    return final_result
 
 if __name__ == '__main__':
-    currency_conversion(30) # 1.061 sec p/operation
-    #currency_conversion(30, False) # 1.172 sec p/operation
+    # testing currency conversion
+    result = test_currency_conversion(100)
+    print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds")
 
-    #translater(5, 'pt', 'en', 'Ola, me chamo Joao Zacchello!') # 6.293 sec p/operation
+    # testing translater
+    result = test_translater(30)
+    print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds")

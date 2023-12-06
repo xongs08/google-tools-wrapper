@@ -15,42 +15,21 @@ pip install google-tools-wrapper
 
 ## Currency Conversion Usage
 ```python
-from google_tools import GoogleTools as tools
+import google_tools as tools
 
-# `only_float=True`
 >>> result = tools.currency_conversion(base_currency='USD', target_currency='BRL')
 >>> print(result)
-4.9024
-
-# `only_float=False`
->>> result = tools.currency_conversion(base_currency='USD', target_currency='BRL', only_float=False)
->>> print(result) # don't looks like it on terminal, just prettyfied it
 {
-    'conversion': [
-        '1 USD',
-        '4.90 BRL'
-    ],
     'float': 4.9024,
     'last_update': 'Nov 25, 4:38:00 PM UTC'
 }
 
-# setting up a benchmark
-import time
-def currency_conversion_test(n: int, only_float_: bool = True):
-    start_timer = time.time()
-    for i in range(n):
-        tools.currency_conversion('USD', 'BRL', only_float=only_float_)
-    finish_timer = time.time() - start_timer
-    avg_time = finish_timer / n
-    print(avg_time:.3f)
-
-# 1st benchmarking:
->>> currency_conversion_test(30)
-1.061 seconds per operation.
-
-# 2nd benchmarking:
->>> currency_conversion_test(30, False)
-1.172 seconds per operation.
+# benchmark (u can see the benchmark on this project github repo):
+>>> result = test_currency_conversion(100)
+>>> print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds") # "limited" to 3 decimals
+MIN TIME: 0.736 seconds
+MAX TIME: 2.152 seconds
+AVG TIME (100 operations): 1.077 seconds
 ```
 
 ## Translater Usage
@@ -61,18 +40,12 @@ from google_tools import GoogleTools as tools
 >>> print(result) # maybe it take around 5-10 seconds to respond, depends on your cpu, selenium is a bit slow
 Hello World!
 
-# setting up a benchmark
-import time
-def translater_test(n: int, source_language_: str, target_language_: str, text_: str):
-    start_timer = time.time()
-    for i in range(n):
-        tools.translater(source_language_, target_language_, text_)
-    finish_timer = time.time() - start_timer
-    avg_time = finish_timer / n
-    print(avg_time:.3f)
-
->>> translater_test(10, 'pt', 'en', 'Ola, me chamo Joao Zacchello!')
-6.293
+# benchmark (u can see the benchmark on this project github repo):
+>>> result = test_translater(30)
+>>> print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds") # "limited" to 3 decimals
+MIN TIME: 5.195650699999533 seconds
+MAX TIME: 7.003255799998442 seconds
+AVG TIME (30 operations): 5.924328183333395 seconds
 ```
 
 ### Disclaimer
