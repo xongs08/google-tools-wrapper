@@ -37,15 +37,15 @@ AVG TIME (100 operations): 1.077 seconds
 import google_tools as tools
 
 >>> result = tools.translater(source_language='pt', target_language='en', text='Ola Mundo!')
->>> print(result) # maybe it take around 5-10 seconds to respond, depends on your cpu, selenium is a bit slow
+>>> print(result)
 Hello World!
 
 # benchmark (u can see the benchmark on this project github repo):
 >>> result = test_translater(30)
 >>> print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds") # "limited" to 3 decimals
-MIN TIME: 5.195650699999533 seconds
-MAX TIME: 7.003255799998442 seconds
-AVG TIME (30 operations): 5.924328183333395 seconds
+MIN TIME: 5.195 seconds
+MAX TIME: 7.003 seconds
+AVG TIME (30 operations): 5.924 seconds
 ```
 
 ### Disclaimer
