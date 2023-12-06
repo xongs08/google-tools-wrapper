@@ -34,7 +34,7 @@ AVG TIME (100 operations): 1.077 seconds
 
 ## Translater Usage
 ```python
-from google_tools import GoogleTools as tools
+import google_tools as tools
 
 >>> result = tools.translater(source_language='pt', target_language='en', text='Ola Mundo!')
 >>> print(result) # maybe it take around 5-10 seconds to respond, depends on your cpu, selenium is a bit slow
