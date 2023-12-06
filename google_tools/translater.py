@@ -13,7 +13,7 @@ def selenium_wrapper(url, selenium_identifier):
 
         driver = webdriver.Chrome(options=Options) # generates an chrome page "emulator"
 
-        # delete devtools message (selenium popup)
+        # delete devtools message (selenium popup) | not working if user compile it by python.exe program.py
         stdout.write("\033[F")
         stdout.write("\033[K")
         stdout.write("\033[F")
@@ -27,8 +27,7 @@ def selenium_wrapper(url, selenium_identifier):
 
         page_code = driver.page_source # get page code
 
-        soup = bs(page_code, 'html.parser')
-        return soup
+        return bs(page_code, 'html.parser')
     except TimeoutException as tout:
         return f"Something went wrong! Error: {str(tout)}"
 
