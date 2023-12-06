@@ -1,4 +1,5 @@
-from time import perf_counter
+import os
+from time import perf_counter, sleep
 import google_tools as gt
 
 def test_currency_conversion(n):
@@ -42,6 +43,9 @@ if __name__ == '__main__':
     result = test_currency_conversion(100)
     print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds")
 
+    sleep(3)
+    os.system('cls')
+    
     # testing translater
     result = test_translater(30)
     print(f"MIN TIME: {result['min_time']} seconds\nMAX TIME: {result['max_time']} seconds\nAVG TIME ({result['avg']['operations']} operations): {result['avg']['time_per_operation']} seconds")
