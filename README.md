@@ -1,4 +1,4 @@
-# An unofficial Google Tools wrapper
+# (Deprecated) An unofficial Google Tools wrapper
 
 ## GoogleTools
 
